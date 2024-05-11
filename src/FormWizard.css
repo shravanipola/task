@@ -1,0 +1,143 @@
+.form-wizard-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .form-title{
+    text-align: center;
+    margin-top: 0px;
+  }
+
+  .form-header {
+    margin-bottom: 20px;
+  }
+  
+  .steps-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .step {
+    width: 30%;
+    text-align: center;
+    padding: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .step.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  .step.completed {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .form-body div {
+    margin-bottom: 10px;
+  }
+  
+  .navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 5px;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 4px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .summary-section {
+    margin-top: 20px;
+  }
+  
+  .summary-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .summary-item label {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
+  .summary-item p {
+    margin: 0;
+  }
+
+  .wrapper-progressBar {
+    width: 100%
+}
+.progressBar {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.progressBar li {
+    list-style-type: none;
+    float: left;
+    width: 33%;
+    position: relative;
+    text-align: center;
+    color: #fff;
+}
+
+.progressBar li:before {
+    content: attr(data-step);
+    line-height: 30px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    display: block;
+    text-align: center;
+    margin: 0 auto 10px;
+    background-color: white
+}
+
+.progressBar li:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background-color: #ddd;
+    top: 15px;
+    left: -50%;
+    z-index: -1;
+}
+
+.progressBar li:first-child:after {
+    content: none;
+}
+
+.progressBar li.active {
+    color: #fff;
+}
+
+.progressBar li.active:before {
+    border-color: dodgerblue;
+    background-color: dodgerblue
+}
+
+.progressBar .active:after {
+    background-color: dodgerblue;
+}
