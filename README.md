@@ -2,6 +2,15 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+
+#**Assignments**
+<App /> ----->Assignment-1
+<LongestSubarrayComponent />  ----->Assignment-3
+<FormWizard />  ----->Assignment-2
+
+->uncomment to lines to run the other assignments project
+->currently it opens assignment-2
+
 ## Available Scripts
 
 In the project directory, you can run:
