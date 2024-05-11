@@ -14,18 +14,21 @@ const FormWizard = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    validateForm();
   };
-
-  console.log(currentStep, "whatthestep");
 
   const validateForm = () => {
     const errors = {};
     if (currentStep === 1) {
       if (!formData.firstName.trim()) {
         errors.firstName = "First name is required";
+      } else if (formData.firstName.trim().length < 5) {
+        errors.firstName = "First name should be at least 5 characters long";
       }
       if (!formData.lastName.trim()) {
         errors.lastName = "Last name is required";
+      } else if (formData.lastName.trim().length < 5) {
+        errors.lastName = "Last name should be at least 5 characters long";
       }
     } else if (currentStep === 2) {
       if (!formData.email.trim()) {
@@ -37,6 +40,8 @@ const FormWizard = () => {
         errors.age = "Age is required";
       } else if (isNaN(formData.age)) {
         errors.age = "Age must be a number";
+      } else if (parseInt(formData.age) === 0) {
+        errors.age = "Age must be a valid number";
       }
     }
 
@@ -46,10 +51,9 @@ const FormWizard = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (currentStep === 3) {
-      alert("Form submitted successfully!");
-    }
+    console.log("🚀 ~ handleSubmit ~ formData:", formData);
   };
+
   const nextStep = () => {
     if (validateForm()) {
       setCurrentStep(currentStep + 1);
@@ -167,7 +171,11 @@ const FormWizard = () => {
               Next
             </button>
           ) : (
-            <button type="submit" className="submit-button">
+            <button
+              type="submit"
+              className="submit-button"
+              onClick={() => alert("Form submitted successfully!")}
+            >
               Submit
             </button>
           )}
