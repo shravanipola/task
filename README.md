@@ -7,7 +7,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 <LongestSubarrayComponent />  ----->Assignment-3
 <FormWizard />  ----->Assignment-2
 
-->uncomment to lines to run the other assignments project
+->uncomment the lines to run the other assignments project
 ->currently it opens assignment-2
 
 ## Available Scripts
