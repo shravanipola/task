@@ -8,13 +8,26 @@ function BasicTable({ data, columns }) {
 
   const filteredData = useMemo(() => {
     if (!filter) return data;
-    return data.filter((row) =>
-      columns.some((column) =>
-        String(row[column.accessor])
-          .toLowerCase()
-          .includes(filter.toLowerCase())
-      )
-    );
+    const filteredRows = [];
+    for (var i = 0; i < data.length; i++) {
+      const row = data[i];
+      var checkRow = false;
+      for (var j = 0; j < columns.length; j++) {
+        const column = columns[j];
+        if (
+          String(row[column.accessor])
+            .toLowerCase()
+            .includes(filter.toLowerCase())
+        ) {
+          checkRow = true;
+          break;
+        }
+      }
+      if (checkRow) {
+        filteredRows.push(row);
+      }
+    }
+    return filteredRows;
   }, [data, columns, filter]);
 
   const sortedData = useMemo(() => {
