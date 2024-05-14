@@ -1,32 +1,28 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import BasicTable from "./Components/BasicTable";
 
 function App() {
-  const [users, setUsers] = useState(true);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     fetch("https://randomuser.me/api/?results=100")
       .then((response) => response.json())
       .then((data) => {
-        setUsers(data.results);
+        setUsers(
+          data.results.map((user) => ({
+            username: user.login.username,
+            email: user.email,
+          }))
+        );
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
-  /** @type import('@tanstack/react-table').ColumnDef<any> */
-
-  const userColumns = [
-    {
-      header: "Username",
-      accessorKey: "login.username",
-    },
-    {
-      header: "Email",
-      accessorKey: "email",
-    },
+  const userData = [
+    { header: "Username", accessor: "username" },
+    { header: "Email", accessor: "email" },
   ];
 
   return (
@@ -34,7 +30,7 @@ function App() {
       <h1 className="heading" style={{ textAlign: "center" }}>
         React Table
       </h1>
-      <BasicTable data={users} columns={userColumns} />
+      <BasicTable data={users} columns={userData} />
     </>
   );
 }

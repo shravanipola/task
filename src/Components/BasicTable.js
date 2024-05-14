@@ -1,73 +1,63 @@
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
-export default function BasicTable({ data, columns }) {
-  const [sorting, setSorting] = useState([]);
-  const [filtering, setFiltering] = useState("");
+function BasicTable({ data, columns }) {
+  const [sorting, setSorting] = useState(null);
+  const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting: sorting,
-      globalFilter: filtering,
-      pageIndex: currentPage - 1,
-    },
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setFiltering,
-  });
+  const filteredData = useMemo(() => {
+    if (!filter) return data;
+    return data.filter((row) =>
+      columns.some((column) =>
+        String(row[column.accessor])
+          .toLowerCase()
+          .includes(filter.toLowerCase())
+      )
+    );
+  }, [data, columns, filter]);
+
+  const sortedData = useMemo(() => {
+    if (!sorting) return filteredData;
+    return [...filteredData].sort((a, b) => {
+      const { accessor, dir } = sorting;
+      if (a[accessor] < b[accessor]) {
+        return dir === "asc" ? -1 : 1;
+      }
+      if (a[accessor] > b[accessor]) {
+        return dir === "asc" ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [filteredData, sorting]);
+
+  const displayData = useMemo(() => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    return sortedData.slice(startIndex, endIndex);
+  }, [sortedData, currentPage, rowsPerPage]);
+
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, sorting]);
 
   return (
     <div className="w3-container">
       <input
         type="text"
-        value={filtering}
-        onChange={(e) => setFiltering(e.target.value)}
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
         placeholder="Search..."
         style={{ marginBottom: "10px" }}
       />
       <table className="w3-table-all">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  {header.isPlaceholder ? null : (
-                    <div>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </div>
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-
         <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+          {displayData.map((row, index) => (
+            <tr key={index}>
+              {columns.map((column) => (
+                <td key={column.accessor}>{row[column.accessor]}</td>
               ))}
             </tr>
           ))}
@@ -81,23 +71,19 @@ export default function BasicTable({ data, columns }) {
         }}
       >
         <button
-          disabled={!table.getCanPreviousPage()}
-          onClick={() => {
-            table.previousPage();
-            setCurrentPage((prevPage) => prevPage - 1);
-          }}
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
         >
           Previous page
         </button>
         <div>
-          Page {currentPage} of {table.getPageCount()}
+          Page {currentPage} of {totalPages}
         </div>
         <button
-          disabled={!table.getCanNextPage()}
-          onClick={() => {
-            table.nextPage();
-            setCurrentPage((prevPage) => prevPage + 1);
-          }}
+          disabled={currentPage === totalPages}
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
         >
           Next page
         </button>
@@ -105,3 +91,5 @@ export default function BasicTable({ data, columns }) {
     </div>
   );
 }
+
+export default BasicTable;
